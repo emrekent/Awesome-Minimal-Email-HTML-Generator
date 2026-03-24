@@ -323,6 +323,59 @@
       }
     }
   },
+  "template_architecture": {
+    "modular_component_system": {
+      "rule": "Model header, body, and footer as discrete JSON sections that render to independent table blocks.",
+      "sections": [
+        "header_block (preheader + greeting)",
+        "body_block (main message + CTA)",
+        "footer_block (signature + compliance)"
+      ],
+      "composition_rule": "Each section must be independently renderable and reusable across templates."
+    },
+    "inheritance_patterns": {
+      "base_template": "Define a base template with shared wrappers, table structure, and typography.",
+      "content_injection": "Inject section-specific content into the base template using deterministic placeholders (e.g., {{sections.header}}, {{sections.body}}, {{sections.footer}}).",
+      "override_rule": "Allow section-level overrides for spacing or emphasis without changing base layout."
+    },
+    "version_control": {
+      "rule": "Track template iterations with semantic version tags (major.minor.patch) in metadata.",
+      "changelog": "Maintain a short changelog of edits (e.g., spacing tweaks, compliance updates) to support rollback.",
+      "rollback_rule": "If a rendering regression is detected, revert to the last known-good version immediately."
+    },
+    "multi_language_switching": {
+      "rule": "Switch template language by mapping locale to the correct content bundle and lang attribute.",
+      "mapping": "Use locale-to-content dictionaries (e.g., content.en_US, content.fr_FR) with default fallbacks.",
+      "fallback_behavior": "If a locale bundle is missing, fall back to en-US and log a QA note."
+    }
+  },
+  "mobile_optimization_deep_dive": {
+    "ios_15_mail_privacy_protection": {
+      "rule": "Assume image proxying and tracking pixel caching; do not rely on open rates for engagement insights.",
+      "tracking_guidance": "Prefer click-based engagement and on-site conversions over pixel opens.",
+      "rendering_note": "Proxy images may strip query params; avoid volatile cache-busting in image URLs."
+    },
+    "samsung_mail_fixes": {
+      "common_bugs": [
+        "Inconsistent margin support on <p> tags",
+        "Font-size inflation on nested tables"
+      ],
+      "fixes": [
+        "Use spacer rows (empty <tr><td height=\"...\">) instead of relying on margins",
+        "Set font-size on every nested <td> to avoid inheritance bugs"
+      ]
+    },
+    "android_gmail_app_quirks": {
+      "margin_collapsing": "Android Gmail may collapse paragraph margins; enforce spacing with padding on <td> wrappers.",
+      "line_height": "Always set line-height inline on each <p> to prevent default overrides.",
+      "link_tap_targets": "Ensure links have sufficient line-height and spacing for tap accessibility."
+    },
+    "fluid_hybrid_coding": {
+      "rule": "Combine max-width with width:100% for responsive stability across clients.",
+      "container_pattern": "Outer table width:100%; inner table max-width:600px; set width:100% on inner table for mobile.",
+      "calc_fallback": "Avoid calc() in email CSS; use fixed max-width with 100% width instead."
+    }
+  },
   "internationalization_localization": {
     "locale_mapping_table": [
       {
