@@ -669,6 +669,50 @@
       "output": "<p style=\"margin:0 0 16px 0;\">This inconsistency is rarely obvious from the inside.</p>\\n<p style=\"margin:0 0 16px 0;\">But from the outside, it creates <strong>uncertainty</strong>.</p>\\n<p style=\"margin:0 0 24px 0;\">When people feel that friction, even if they cannot fully articulate it, they <em>hesitate</em>, <em>disengage</em>, or lose <u>confidence</u> in what they are seeing.</p>"
     }
   ],
+  "content_personalization_ai": {
+    "tone_adaptation_per_segment": {
+      "rule": "Adapt tone to recipient segment while preserving Emilia's calm, precise voice. Use formal tone for enterprise, senior leadership, or compliance-heavy segments; use casual tone for creators, community, or early-stage founder segments.",
+      "formal_markers": [
+        "Use complete sentences and avoid slang",
+        "Prefer neutral, professional language",
+        "Reduce contractions when clarity matters"
+      ],
+      "casual_markers": [
+        "Allow contractions and a warmer, conversational cadence",
+        "Use simple, friendly phrasing",
+        "Keep sentences short and approachable"
+      ]
+    },
+    "dynamic_sentence_generation": {
+      "rule": "Generate or adjust sentences using user behavior data (opens, clicks, last activity, product usage) to personalize relevance without sounding automated.",
+      "examples": [
+        "If recent click on product A, reference that interest in the first 2 paragraphs.",
+        "If inactive for 30+ days, acknowledge the gap softly and offer a quick re-entry point."
+      ],
+      "guardrails": [
+        "Never reveal sensitive or creepy specifics (avoid exact timestamps or detailed tracking data).",
+        "Keep personalization to 1-2 sentences max per email."
+      ]
+    },
+    "sentiment_analysis": {
+      "rule": "Analyze generated copy and ensure overall sentiment is positive or neutral. Soften or remove language that reads negative, guilt-inducing, or shaming.",
+      "actions": [
+        "Replace negative framing with supportive alternatives",
+        "Avoid fear-based urgency"
+      ]
+    },
+    "reading_level_scoring": {
+      "rule": "Score readability using Flesch-Kincaid and optimize to the audience.",
+      "targets": [
+        "General audience: grade 6-8",
+        "Professional/technical audience: grade 9-11"
+      ],
+      "adjustments": [
+        "Shorten sentences and reduce jargon to lower grade level",
+        "Use familiar words and concrete phrasing"
+      ]
+    }
+  },
   "success_criteria": [
     "Email feels like Emilia sat down and wrote it personally to the recipient",
     "Text is immediately readable (pure black on pure white)",
