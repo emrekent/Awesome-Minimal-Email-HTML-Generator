@@ -118,7 +118,15 @@
       "All {% if %} blocks have matching {% endif %} and {% else %} fallbacks",
       "All links have descriptive aria-label attributes",
       "Semantic landmarks (<header>, <main>, <footer>) present with role attributes",
-      "Screen-reader-only text used where visual context is lost"
+      "Screen-reader-only text used where visual context is lost",
+      "Toxic language detection and bias checks passed",
+      "Brand voice consistency score >= 85/100",
+      "Broken link detection completed (no empty or non-HTTPS URLs)",
+      "WCAG 2.1 AA contrast ratios validated for all text and links",
+      "If event data exists, .ics calendar link generated and included",
+      "If event data exists, Gmail Go-to-Action schema included when ESP allows",
+      "If event data exists, RSVP inline links (Yes/No/Maybe) present with aria-labels",
+      "Event time displayed in recipient timezone when available"
     ]
   },
   "performance_tracking_analytics": {
