@@ -458,11 +458,13 @@
     "9. Accessibility pass: Add aria-label to all links, screen-reader-only context spans, semantic roles on landmarks",
     "10. Preheader insertion: Add hidden preheader div with zero-height technique",
     "11. CTA placement: Insert formatted CTA after opening hook, use absolute URL with underline styling and aria-label",
-    "12. Final validation: Confirm all CSS inline, no <style> tags (except optional a:focus rule), file size under 100KB, contrast ratios met",
-    "13. Render test check: Ensure structure displays in Outlook (tables), Gmail (inline CSS), Apple Mail (dark mode meta, ARIA support)",
-    "14. Localization pass: Verify date/time formatting per locale, CJK font fallbacks, and RTL dir=\"rtl\" handling for ar/he",
-    "14a. Locale examples: en-US (March 27, 11:00 AM), en-GB (27 March, 11:00), fr-FR (27 mars, 11:00), de-DE (27. März, 11:00), ar (٢٧ مارس, ١١:٠٠ مع الاتجاه rtl), he (27 במרץ, 11:00 עם dir=\"rtl\"), zh-CN (3月27日, 11:00), ja (3月27日, 11:00), ko (3월 27일, 11:00)",
-    "15. QA hooks: Run Litmus/Email on Acid render tests, dark mode preview (forced light/dark), SpamAssassin score, and client CSS capability checks where configured"
+    "12. Moderation pass: Run toxic language detection and brand voice consistency scoring; revise if below threshold",
+    "13. Calendar actions: If event data exists, generate .ics link and add Gmail Go-to-Action schema when allowed",
+    "14. Final validation: Confirm all CSS inline, no <style> tags (except optional a:focus rule), file size under 100KB, contrast ratios met, links validated",
+    "15. Render test check: Ensure structure displays in Outlook (tables), Gmail (inline CSS), Apple Mail (dark mode meta, ARIA support)",
+    "16. Localization pass: Verify date/time formatting per locale, CJK font fallbacks, and RTL dir=\"rtl\" handling for ar/he, and timezone conversion when known",
+    "16a. Locale examples: en-US (March 27, 11:00 AM), en-GB (27 March, 11:00), fr-FR (27 mars, 11:00), de-DE (27. März, 11:00), ar (٢٧ مارس, ١١:٠٠ مع الاتجاه rtl), he (27 במרץ, 11:00 עם dir=\"rtl\"), zh-CN (3月27日, 11:00), ja (3月27日, 11:00), ko (3월 27일, 11:00)",
+    "17. QA hooks: Run Litmus/Email on Acid render tests, dark mode preview (forced light/dark), SpamAssassin score, and client CSS capability checks where configured"
   ],
   "prohibitions": [
     "No em-dashes (—) - use periods or hyphens instead",
@@ -487,6 +489,10 @@
       "Verify all CSS properties are inline (search for '<style' - should be 0 results, except optional a:focus rule)",
       "Count links (must be 3-5 max)",
       "Scan for spam trigger words using regex: /\\b(FREE|ACT NOW|BUY|URGENT|LIMITED)\\b/gi",
+      "Run WCAG 2.1 AA contrast checks for all text and link colors",
+      "Validate all links resolve and are non-empty (broken link detection)",
+      "Score brand voice consistency; revise if below 85/100",
+      "Run toxic language detection and bias checks; revise any flagged content",
       "Confirm lang attribute present on html tag",
       "If locale is ar/he, confirm dir=\"rtl\" on <html> and main content table",
       "If locale is zh/ja/ko, confirm CJK font fallbacks are appended after Arial",
@@ -575,5 +581,54 @@
     "All template variables render gracefully with fallbacks when data is missing",
     "Conditional content blocks degrade cleanly - no recipient sees empty or broken sections",
     "Dynamic segments produce personalized content while maintaining the handwritten feel"
-  ]
+  ],
+  "content_moderation_safety": {
+    "toxic_language_detection": {
+      "purpose": "Detect profanity, slurs, harassment, and biased language before output.",
+      "rule": "Scan subject and body for toxic language. If found, soften or remove and flag in QA notes.",
+      "examples": "Profanity, demeaning descriptors, protected-class bias, stereotyping."
+    },
+    "brand_voice_consistency": {
+      "purpose": "Ensure the output matches Emilia's calm, precise, handwritten voice.",
+      "scoring": "Score tone match 0-100. If below 85, revise for warmth, clarity, and minimalism.",
+      "signals": [
+        "Short, confident sentences",
+        "Low hype, high sincerity",
+        "No marketing clichés",
+        "Natural, conversational pacing"
+      ]
+    },
+    "broken_link_detection": {
+      "purpose": "Prevent broken links in final output.",
+      "rule": "Validate all hrefs are absolute HTTPS and non-empty. If a URL is missing, replace with plain text and flag.",
+      "output": "Include a QA note listing any link removals or replacements."
+    },
+    "accessibility_contrast_automation": {
+      "purpose": "Enforce WCAG 2.1 AA contrast compliance.",
+      "rule": "Auto-calculate contrast ratios for all text and link colors. Minimum 4.5:1 for normal text.",
+      "note": "Default black on white is compliant; flag any deviation."
+    }
+  },
+  "calendar_action_integration": {
+    "ics_generation": {
+      "purpose": "Generate .ics files for Add to Calendar links when event details exist.",
+      "rule": "If event title, start, end, and timezone are provided, create an .ics and link to it.",
+      "filename_pattern": "{{custom_values.event_slug|default:\"event\"}}.ics"
+    },
+    "gmail_go_to_action_schema": {
+      "purpose": "Add Schema.org markup for Gmail Go-to-Action buttons when applicable.",
+      "rule": "Include JSON-LD in the email head if allowed by the ESP; fallback to a standard text link.",
+      "schema_type": "EventReservation or ConfirmAction depending on CTA."
+    },
+    "rsvp_in_body": {
+      "purpose": "Provide RSVP functionality within the email body.",
+      "rule": "Use two inline text links (Yes/No/Maybe) with tracking parameters; avoid forms.",
+      "accessibility": "Each RSVP link must include an aria-label and clear text."
+    },
+    "timezone_detection_conversion": {
+      "purpose": "Auto-detect recipient timezone and convert event times.",
+      "rule": "If recipient timezone is known, display localized time and include original timezone in parentheses.",
+      "fallback": "If unknown, default to event timezone and avoid ambiguous abbreviations."
+    }
+  }
 }
