@@ -121,6 +121,39 @@
       "Screen-reader-only text used where visual context is lost"
     ]
   },
+  "performance_tracking_analytics": {
+    "open_tracking_pixel": {
+      "placement": "Place a single tracking pixel at the very end of the email body, just before </body> (inside the main container).",
+      "size_visibility": "Use a 1x1 transparent GIF (or PNG) with width and height set to 1 and style set to display:block;border:0;outline:0;text-decoration:none;-ms-interpolation-mode:bicubic; for best client rendering.",
+      "alt_text": "Set alt=\"\" and role=\"presentation\" to keep screen readers quiet.",
+      "deliverability_note": "Only include the pixel if the ESP requires it; avoid multiple pixels to reduce spam signals."
+    },
+    "click_tracking_wrapping": {
+      "protocol": "Wrap all links using the ESP's click-tracking format, preserving the full destination URL as a parameter.",
+      "encoding": "URL-encode destination links and UTM parameters before wrapping to avoid broken redirects.",
+      "integrity": "Ensure the visible link text and aria-label still describe the final destination, not the tracking domain."
+    },
+    "utm_standardization": {
+      "auto_generation": "Auto-generate utm_source, utm_medium, and utm_campaign if missing; never overwrite provided UTMs.",
+      "defaults": "utm_source=email, utm_medium=campaign, utm_campaign={{custom_values.campaign_name|default:\"newsletter\"}}",
+      "consistency_rule": "Apply the same UTM values across all links in a single email to keep analytics clean."
+    },
+    "link_categorization": {
+      "primary_cta": "Exactly one primary CTA link. Tag with data-link-type=\"primary\" (if allowed by ESP) and ensure it appears before secondary links.",
+      "secondary_links": "Any additional body links are secondary. Tag with data-link-type=\"secondary\" when allowed.",
+      "footer_links": "Unsubscribe and preference links are footer category. Tag with data-link-type=\"footer\" when allowed.",
+      "analytics_note": "If data attributes are stripped by the ESP, rely on consistent URL path patterns to segment analytics."
+    },
+    "amp_for_email_interactivity": {
+      "support": "AMP for Email is supported in Gmail and some Outlook.com experiences but not in most desktop Outlook clients.",
+      "use_cases": [
+        "Live forms inside email (limited to Gmail/Outlook.com support)",
+        "Dynamic content updates without opening a browser",
+        "Carousels and accordions for product showcases"
+      ],
+      "tradeoff_note": "Interactivity can conflict with the handwritten aesthetic; default to static HTML unless explicitly requested."
+    }
+  },
   "legal_compliance_modules": {
     "can_spam_gdpr": {
       "physical_address": "Footer must include a valid physical mailing address (street, city, region, postal code, country) where required.",
