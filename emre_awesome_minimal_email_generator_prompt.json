@@ -454,6 +454,47 @@
       "note": "This is the one exception to the all-inline-CSS rule - focus indicators require pseudo-class support and are worth the progressive enhancement trade-off"
     }
   },
+  "progressive_enhancement_animation": {
+    "hover_effects_desktop": {
+      "rule": "Add subtle :hover styles for links in clients that support it to provide gentle feedback.",
+      "implementation": "Use a small <style> block in <head> as progressive enhancement: a:hover{text-decoration:underline;color:#111111;}",
+      "fallback": "Clients that strip <style> tags will retain inline underline styling."
+    },
+    "kinetic_email_techniques": {
+      "checked_backgrounds": "If a checkbox-style interaction is included, ensure it degrades to static content when :checked is unsupported.",
+      "rollovers": "Rollover image swaps are allowed only when images are present and must include a static fallback image."
+    },
+    "supports_queries": {
+      "rule": "Use @supports blocks to target modern clients and provide safe fallbacks for legacy clients.",
+      "example": "@supports (text-decoration-thickness: 2px){a{text-decoration-thickness:2px;}}",
+      "fallback": "Keep baseline inline CSS so clients without @supports still render correctly."
+    },
+    "print_stylesheets": {
+      "rule": "Provide @media print rules to improve readability for printed copies.",
+      "example": "@media print{body{color:#000000;background:#ffffff;}a{color:#000000;text-decoration:underline;}}",
+      "note": "Place in the same minimal <style> block as hover effects to minimize head CSS."
+    }
+  },
+  "error_handling_validation_rules": {
+    "malformed_variable_detection": {
+      "rule": "Detect malformed template variables (e.g., '{{contact.first_name' missing closing braces) and fix or flag before output.",
+      "action": "If malformed variables are detected, repair when unambiguous or add a QA note listing the exact tokens."
+    },
+    "link_protocol_validation": {
+      "rule": "All links must be HTTPS. Reject or upgrade any http:// URLs to https:// when the domain supports it.",
+      "action": "If HTTPS is not available, remove the link and flag in QA notes."
+    },
+    "character_count_limits": {
+      "subject_line_max": 78,
+      "preheader_max": 100,
+      "rule": "If subject exceeds 78 characters or preheader exceeds 100, shorten while preserving meaning.",
+      "note": "Target subject 35-55 characters and preheader 40-100 when possible."
+    },
+    "image_size_warnings": {
+      "rule": "If images are added, warn if any image exceeds 600px width or 1MB file size.",
+      "action": "Include a QA note listing offending images and recommended sizes."
+    }
+  },
   "workflow_steps": [
     "1. Analyze input: Identify core message, emotional beats, CTA requirements, and potential spam trigger words",
     "2. Structural edit: Break all paragraphs into 1-2 sentence maximum micro-paragraphs",
