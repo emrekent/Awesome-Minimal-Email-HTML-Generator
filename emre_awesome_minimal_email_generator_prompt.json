@@ -110,12 +110,58 @@
       "Outlook conditional comments if using special elements",
       "Text-to-link ratio balanced (60/40 minimum)",
       "No spam trigger words or excessive punctuation",
+      "CAN-SPAM/GDPR: physical mailing address present in footer and unsubscribe link is visible and functional",
+      "CASL: explicit consent indicator included where required (Canada segments)",
+      "EU: company registration number included where required",
+      "RFC 8058: one-click unsubscribe headers prepared for ESP injection (List-Unsubscribe, List-Unsubscribe-Post)",
       "All template variables have |default: fallbacks",
       "All {% if %} blocks have matching {% endif %} and {% else %} fallbacks",
       "All links have descriptive aria-label attributes",
       "Semantic landmarks (<header>, <main>, <footer>) present with role attributes",
       "Screen-reader-only text used where visual context is lost"
     ]
+  },
+  "legal_compliance_modules": {
+    "can_spam_gdpr": {
+      "physical_address": "Footer must include a valid physical mailing address (street, city, region, postal code, country) where required.",
+      "unsubscribe_placement": "Unsubscribe link must be clearly visible, in the footer, and not hidden or styled to be indistinct.",
+      "gdpr_copy": "Include reason for receiving when required: 'You are receiving this because you opted in at [source]'.",
+      "processing_basis": "If applicable, mention lawful basis (consent/legitimate interest) for EU recipients.",
+      "data_rights": "Provide link to privacy policy or data rights page when required."
+    },
+    "casl_canada": {
+      "explicit_consent_indicator": "Add explicit consent indicator for Canadian recipients (e.g., 'You opted in on [date/source]')",
+      "unsubscribe_timing": "Unsubscribe requests must be honored promptly; include a clear note in the footer if required by ESP policy."
+    },
+    "eu_company_registration": {
+      "requirement": "Include company registration number in the footer when required by EU member state law.",
+      "format": "Company name + registration number + registered office address."
+    },
+    "one_click_unsubscribe_rfc8058": {
+      "headers": [
+        "List-Unsubscribe: <mailto:unsubscribe@domain.com>, <https://domain.com/unsubscribe?u={{contact.id|default:\"\"}}>",
+        "List-Unsubscribe-Post: List-Unsubscribe=One-Click"
+      ],
+      "note": "Headers are set by the sending platform; include placeholders and ensure the unsubscribe landing page supports one-click flow."
+    }
+  },
+  "advanced_deliverability_reputation": {
+    "bimi_dmarc_readiness": {
+      "rule": "Encourage alignment with DMARC policy (p=quarantine/reject) and BIMI record readiness for logo display.",
+      "note": "Email HTML should avoid broken image references; BIMI logos are controlled via DNS and inbox display."
+    },
+    "gmail_promotions_avoidance": {
+      "annotation_markup": "If using Gmail promotions annotations, include JSON-LD in the head only when required by the ESP; otherwise avoid promotional markup to reduce Promotions tab placement.",
+      "inbox_features": "Avoid excessive promotional language and multiple CTA blocks that trigger Promotions classification."
+    },
+    "text_to_image_ratio_calculator": {
+      "rule": "Automatically validate text-to-image ratio (target 80%+ text).",
+      "method": "Compute total text characters vs. total image pixel area when images are present; flag if below threshold."
+    },
+    "url_reputation_precheck": {
+      "rule": "Pre-check all URLs against known blacklist/poor-reputation sources before output.",
+      "fallback": "If a URL is flagged, require replacement or remove the link."
+    }
   },
   "rhythm_rules": {
     "paragraph_structure": {
@@ -313,6 +359,12 @@
       "Confirm lang attribute present on html tag",
       "Verify role=\"presentation\" on all tables",
       "Check meta tags: charset, viewport, X-UA-Compatible, color-scheme",
+      "Validate CAN-SPAM/GDPR footer elements (physical address + unsubscribe link visibility)",
+      "Validate CASL explicit consent indicator for Canada segments",
+      "Validate EU company registration number when required",
+      "Confirm List-Unsubscribe and List-Unsubscribe-Post headers are configured in ESP",
+      "Run text-to-image ratio calculator (>=80% text)",
+      "Run URL reputation pre-check (no blacklisted domains)",
       "Validate all {{variables}} have |default: fallbacks",
       "Verify all {% if %} blocks are balanced with {% endif %} and have {% else %} fallbacks",
       "Confirm aria-label on all <a> tags",
