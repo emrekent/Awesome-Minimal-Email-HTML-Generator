@@ -23,7 +23,7 @@
       "texture": "none - keep it clean like stationery"
     },
     "typography": {
-      "primary_font": "Arial, Helvetica, sans-serif",
+      "primary_font": "Arial, Helvetica, sans-serif (add CJK fallbacks for zh/ja/ko locales: 'PingFang SC', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', 'Noto Sans CJK SC', 'Noto Sans CJK JP', 'Noto Sans CJK KR', 'Microsoft YaHei', 'MS PGothic', 'Malgun Gothic', sans-serif)",
       "font_size_base": "16px",
       "line_height": "1.6",
       "text_color": "#000000 (pure black for maximum readability)",
@@ -40,7 +40,7 @@
   "deliverability_technical_specs": {
     "html_structure": {
       "doctype": "<!DOCTYPE html> (must be present for rendering consistency)",
-      "lang_attribute": "lang=\"en\" required on <html> tag for accessibility and spam filters",
+      "lang_attribute": "Set lang=\"{locale}\" on <html> tag (e.g., en, en-US, fr, ar, he, zh-CN, ja, ko) for accessibility and spam filters. If RTL locale (ar/he), also set dir=\"rtl\" on <html> and apply direction-aware spacing where needed.",
       "meta_tags": [
         "<meta charset=\"UTF-8\">",
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
@@ -282,6 +282,101 @@
       }
     }
   },
+  "internationalization_localization": {
+    "locale_mapping_table": [
+      {
+        "locale": "en-US",
+        "lang": "en-US",
+        "dir": "ltr",
+        "date_example": "March 27",
+        "time_example": "11:00 AM",
+        "cjk_font_fallbacks": false
+      },
+      {
+        "locale": "en-GB",
+        "lang": "en-GB",
+        "dir": "ltr",
+        "date_example": "27 March",
+        "time_example": "11:00",
+        "cjk_font_fallbacks": false
+      },
+      {
+        "locale": "fr-FR",
+        "lang": "fr-FR",
+        "dir": "ltr",
+        "date_example": "27 mars",
+        "time_example": "11:00",
+        "cjk_font_fallbacks": false
+      },
+      {
+        "locale": "de-DE",
+        "lang": "de-DE",
+        "dir": "ltr",
+        "date_example": "27. März",
+        "time_example": "11:00",
+        "cjk_font_fallbacks": false
+      },
+      {
+        "locale": "ar",
+        "lang": "ar",
+        "dir": "rtl",
+        "date_example": "٢٧ مارس",
+        "time_example": "١١:٠٠",
+        "cjk_font_fallbacks": false
+      },
+      {
+        "locale": "he",
+        "lang": "he",
+        "dir": "rtl",
+        "date_example": "27 במרץ",
+        "time_example": "11:00",
+        "cjk_font_fallbacks": false
+      },
+      {
+        "locale": "zh-CN",
+        "lang": "zh-CN",
+        "dir": "ltr",
+        "date_example": "3月27日",
+        "time_example": "11:00",
+        "cjk_font_fallbacks": true
+      },
+      {
+        "locale": "ja",
+        "lang": "ja",
+        "dir": "ltr",
+        "date_example": "3月27日",
+        "time_example": "11:00",
+        "cjk_font_fallbacks": true
+      },
+      {
+        "locale": "ko",
+        "lang": "ko",
+        "dir": "ltr",
+        "date_example": "3월 27일",
+        "time_example": "11:00",
+        "cjk_font_fallbacks": true
+      }
+    ],
+    "locale_handling": {
+      "default_locale": "en-US",
+      "lang_attribute_rule": "Map input locale to the <html lang=\"...\"> attribute (e.g., en-US, en-GB, fr-FR, de-DE, ar, he, zh-CN, ja, ko). If locale is unknown, default to en-US.",
+      "fallback_mapping_rule": "If only a language is provided (e.g., en, fr, de, ar, he, zh, ja, ko), map to a default region: en->en-US, fr->fr-FR, de->de-DE, ar->ar, he->he, zh->zh-CN, ja->ja, ko->ko.",
+      "dir_attribute_rule": "If locale is Arabic (ar) or Hebrew (he), add dir=\"rtl\" on <html> and on the main content table to enforce right-to-left flow. Keep numeric/URL tokens left-to-right (use dir=\"ltr\" on links or spans if needed).",
+      "direction_sensitive_spacing": "When RTL, swap left/right padding or borders as needed (e.g., quote blocks use border-right instead of border-left)."
+    },
+    "date_time_localization": {
+      "rule": "Format dates and times per locale preference and avoid ambiguity. Examples: en-US uses 'March 27' and '11:00 AM', en-GB uses '27 March' and '11:00', fr-FR uses '27 mars' and '11:00', de-DE uses '27. März' and '11:00'.",
+      "timezone_copy": "If a specific timezone is provided, include it in localized format (e.g., '11:00 AM ET' vs '11:00 CET')."
+    },
+    "font_fallbacks_cjk": {
+      "rule": "For Chinese/Japanese/Korean locales, append locale-appropriate system fonts after Arial to avoid tofu and mismatched glyphs. Keep overall font size and line height unchanged."
+    },
+    "encoding_edge_cases": {
+      "charset": "UTF-8 must be set. Preserve emoji as standard Unicode.",
+      "softbank_emoji": "Avoid legacy SoftBank emoji code points; normalize to Unicode emoji to prevent client rendering glitches.",
+      "normalization": "Prefer NFC normalization for composed characters to avoid broken glyphs in some clients."
+    }
+  },
   "deep_accessibility": {
     "aria_labels": {
       "links": "Add aria-label to all links with descriptive context: <a href=\"...\" aria-label=\"Register for March 27 masterclass\" style=\"...\">click here to register</a>",
@@ -325,13 +420,16 @@
     "4. Deliverability audit: Check for spam trigger words, excessive punctuation, link count (max 3-5), text-to-link ratio",
     "5. Variable fallback check: Ensure every {{variable}} has a |default: fallback. Preview with all variables empty.",
     "6. Conditional logic review: Validate {% if %}/{% endif %} pairs are balanced, nesting is max 2 levels, and {% else %} fallbacks exist",
-    "7. HTML skeleton: Create DOCTYPE, html lang=\"en\", meta tags (charset, viewport, X-UA-Compatible, color-scheme), body with semantic landmarks (<header>, <main>, <footer>)",
+    "7. HTML skeleton: Create DOCTYPE, html lang=\"{locale}\" and dir=\"rtl\" if ar/he, meta tags (charset, viewport, X-UA-Compatible, color-scheme), body with semantic landmarks (<header>, <main>, <footer>)",
     "8. Content wrapping: Nest in table structure with role=\"presentation\", max-width 600px, Arial font inline",
     "9. Accessibility pass: Add aria-label to all links, screen-reader-only context spans, semantic roles on landmarks",
     "10. Preheader insertion: Add hidden preheader div with zero-height technique",
     "11. CTA placement: Insert formatted CTA after opening hook, use absolute URL with underline styling and aria-label",
     "12. Final validation: Confirm all CSS inline, no <style> tags (except optional a:focus rule), file size under 100KB, contrast ratios met",
-    "13. Render test check: Ensure structure displays in Outlook (tables), Gmail (inline CSS), Apple Mail (dark mode meta, ARIA support)"
+    "13. Render test check: Ensure structure displays in Outlook (tables), Gmail (inline CSS), Apple Mail (dark mode meta, ARIA support)",
+    "14. Localization pass: Verify date/time formatting per locale, CJK font fallbacks, and RTL dir=\"rtl\" handling for ar/he",
+    "14a. Locale examples: en-US (March 27, 11:00 AM), en-GB (27 March, 11:00), fr-FR (27 mars, 11:00), de-DE (27. März, 11:00), ar (٢٧ مارس, ١١:٠٠ مع الاتجاه rtl), he (27 במרץ, 11:00 עם dir=\"rtl\"), zh-CN (3月27日, 11:00), ja (3月27日, 11:00), ko (3월 27일, 11:00)",
+    "15. QA hooks: Run Litmus/Email on Acid render tests, dark mode preview (forced light/dark), SpamAssassin score, and client CSS capability checks where configured"
   ],
   "prohibitions": [
     "No em-dashes (—) - use periods or hyphens instead",
@@ -357,6 +455,8 @@
       "Count links (must be 3-5 max)",
       "Scan for spam trigger words using regex: /\\b(FREE|ACT NOW|BUY|URGENT|LIMITED)\\b/gi",
       "Confirm lang attribute present on html tag",
+      "If locale is ar/he, confirm dir=\"rtl\" on <html> and main content table",
+      "If locale is zh/ja/ko, confirm CJK font fallbacks are appended after Arial",
       "Verify role=\"presentation\" on all tables",
       "Check meta tags: charset, viewport, X-UA-Compatible, color-scheme",
       "Validate CAN-SPAM/GDPR footer elements (physical address + unsubscribe link visibility)",
@@ -368,7 +468,9 @@
       "Validate all {{variables}} have |default: fallbacks",
       "Verify all {% if %} blocks are balanced with {% endif %} and have {% else %} fallbacks",
       "Confirm aria-label on all <a> tags",
-      "Check semantic landmarks: <header>, <main>, <footer> with role attributes"
+      "Check semantic landmarks: <header>, <main>, <footer> with role attributes",
+      "If enabled, record SpamAssassin score and flag if above threshold (default > 3.0)",
+      "If enabled, capture Litmus/Email on Acid render previews (Gmail, Outlook, Apple Mail, Yahoo) and store links"
     ],
     "spam_score_factors": {
       "positive": [
@@ -385,6 +487,35 @@
         "Spam keywords",
         "Poor mobile rendering"
       ]
+    }
+  },
+  "testing_qa_automation_hooks": {
+    "litmus_email_on_acid": {
+      "purpose": "Render testing across major clients with pixel-accurate previews.",
+      "integration": "If API credentials are provided in execution tooling, submit the final HTML for render tests and capture preview URLs per client.",
+      "required_clients": [
+        "Gmail (web)",
+        "Outlook (Windows)",
+        "Apple Mail (macOS)",
+        "iOS Mail",
+        "Yahoo Mail"
+      ],
+      "note": "If integration is not configured, include a TODO line in the QA checklist output."
+    },
+    "dark_mode_previews": {
+      "purpose": "Generate previews for forced light and forced dark modes to detect unintended inversions.",
+      "rule": "Even when forcing light mode via meta tags, capture a forced-dark preview for verification.",
+      "output": "Store preview links or image paths alongside the render tests."
+    },
+    "spamassassin_scoring": {
+      "purpose": "Quantify spam risk before sending.",
+      "rule": "Run SpamAssassin scoring on the final HTML; flag if score > 3.0 or if any rule contributes > 1.0.",
+      "output": "Record total score and top contributing rules."
+    },
+    "client_capability_detection": {
+      "purpose": "Detect CSS/HTML support per target client and avoid unsupported features.",
+      "rule": "Map used CSS properties to known client support tables (e.g., Outlook/Word engine, Gmail Web, Apple Mail). Remove or replace unsupported properties.",
+      "example": "If a property fails in Outlook (e.g., margin on <p>), ensure table-based spacing fallback is used."
     }
   },
   "transformation_examples": [
